@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Stack, Drawer, Button } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
@@ -21,6 +21,7 @@ import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
 import NotificationsPopover from '../header/NotificationsPopover'
+import LanguagePopover from '../header/LanguagePopover'
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,11 @@ const RootStyle = styled('div')(({ theme }) => ({
     }),
   },
 }));
+
+const ButtonBox = styled('div')(({ theme }) => ({
+  border: '1px solid rgba(145, 158, 171, 0.32)',
+  borderRadius: Number(theme.shape.borderRadius) * 1.5,
+}))
 
 // ----------------------------------------------------------------------
 
@@ -64,30 +70,43 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Stack
-        spacing={3}
-        sx={{
-          pt: 3,
-          pb: 2,
-          px: 2.5,
-          flexShrink: 0,
-          ...(isCollapse && { alignItems: 'center' }),
-        }}
-      >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Logo />
+      <Box>
+        <Stack
+          spacing={3}
+          sx={{
+            pt: 3,
+            pb: 2,
+            px: 2.5,
+            flexShrink: 0,
+            ...(isCollapse && { alignItems: 'center' }),
+          }}
+        >
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Logo />
 
-          {/* {isDesktop && !isCollapse && ( */}
-          {/*  <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} /> */}
-          {/* )} */}
-          <NotificationsPopover />
+            {/* {isDesktop && !isCollapse && ( */}
+            {/*  <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} /> */}
+            {/* )} */}
+            <NotificationsPopover />
+          </Stack>
+
         </Stack>
 
-      </Stack>
+        <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      </Box>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <Box sx={{ mt: 15 }}>
+        <NavbarAccount isCollapse={isCollapse} />
+      </Box>
 
-      <NavbarAccount isCollapse={isCollapse} />
+      <Box sx={{ width: '87%', m: '0 auto', pt: 1, display: 'flex', justifyContent: 'space-between' }}>
+        <ButtonBox sx={{ flexGrow: '0.75' }}>
+          Mode
+        </ButtonBox>
+        <ButtonBox>
+          <LanguagePopover />
+        </ButtonBox>
+      </Box>
     </Scrollbar>
   );
 

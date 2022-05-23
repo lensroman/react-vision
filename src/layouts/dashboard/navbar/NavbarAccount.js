@@ -1,22 +1,20 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Divider, IconButton, RadioGroup, Radio, Typography, FormControlLabel, Collapse } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
+import SvgIconStyle from '../../../components/SvgIconStyle'
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
   width: '87%',
   margin: '0 auto',
-  display: 'flex',
-  alignItems: 'center',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
   backgroundColor: theme.palette.grey[500_12],
@@ -34,8 +32,14 @@ NavbarAccount.propTypes = {
 export default function NavbarAccount({ isCollapse }) {
   const { user } = useAuth();
 
+  const [accountCollapse, setAccountCollapse] = useState(false)
+
+  const accountCollapseHandler = () => {
+    setAccountCollapse(!accountCollapse)
+  }
+
   return (
-    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+    <Box>
       <RootStyle
         sx={{
           ...(isCollapse && {
@@ -43,29 +47,54 @@ export default function NavbarAccount({ isCollapse }) {
           }),
         }}
       >
-        <MyAvatar />
-
         <Box
           sx={{
-            ml: 2,
-            transition: (theme) =>
-              theme.transitions.create('width', {
-                duration: theme.transitions.duration.shorter,
-              }),
-            ...(isCollapse && {
-              ml: 0,
-              width: 0,
-            }),
+            display: 'flex',
+            alignItems: 'center'
           }}
         >
-          <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
-          </Typography>
-          <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role}
-          </Typography>
+          <MyAvatar />
+
+          <Box
+            sx={{
+              ml: 2,
+              transition: (theme) =>
+                theme.transitions.create('width', {
+                  duration: theme.transitions.duration.shorter,
+                }),
+              ...(isCollapse && {
+                ml: 0,
+                width: 0,
+              }),
+            }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              {user?.displayName}
+            </Typography>
+            <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
+              {user?.role}
+            </Typography>
+          </Box>
+
+          <Box sx={{ alignSelf: 'flex-start', pl: 2 }}>
+            <IconButton onClick={accountCollapseHandler} >
+              <SvgIconStyle src="/assets/icons/navbar/NavAccountCollapse.svg" sx={{ width: 12, height: 12, color: 'text.secondary' }} />
+            </IconButton>
+          </Box>
         </Box>
+
+        <Collapse in={accountCollapse}>
+          <Divider sx={{ pt: 1, pb: 1 }} />
+
+          <RadioGroup
+            defaultValue="personal"
+            sx={{ mt: 1 }}
+          >
+            <FormControlLabel value="personal" control={<Radio />} label="Personal" />
+            <FormControlLabel value="team" control={<Radio />} label="Team" />
+          </RadioGroup>
+        </Collapse>
       </RootStyle>
-    </Link>
+    </Box>
   );
 }
