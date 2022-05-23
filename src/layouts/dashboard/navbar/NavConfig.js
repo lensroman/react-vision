@@ -25,6 +25,7 @@ const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
+    subheader: 'general',
     items: [
       { title: 'Browsers', path: PATH_DASHBOARD.general.app, icon: ICONS.browsers },
       { title: 'Tracking', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.tracking },
@@ -33,10 +34,18 @@ const navConfig = [
       { title: 'Automation', path: PATH_DASHBOARD.general.booking, icon: ICONS.automation },
       { title: 'Settings', path: PATH_DASHBOARD.general.booking, icon: ICONS.settings },
       { title: 'Payment', path: PATH_DASHBOARD.general.booking, icon: ICONS.payment },
+    ],
+    divider: true
+  },
+
+  // OPTIONS
+  {
+    subheader: 'options',
+    items: [
       { title: 'Support', path: PATH_DASHBOARD.general.booking, icon: ICONS.support },
       { title: 'Log Out', path: PATH_DASHBOARD.general.booking, icon: ICONS.logOut },
-    ],
-  },
+    ]
+  }
 ];
 
 export default navConfig;

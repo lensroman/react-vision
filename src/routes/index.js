@@ -59,9 +59,7 @@ export default function Router() {
     {
       path: 'dashboardTest',
       element: (
-        <AuthGuard>
           <DashboardLayout />
-        </AuthGuard>
       ),
     },
 
