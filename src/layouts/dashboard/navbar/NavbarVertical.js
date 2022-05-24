@@ -13,19 +13,19 @@ import cssStyles from '../../../utils/cssStyles';
 import { NAVBAR } from '../../../config';
 // components
 import Logo from '../../../components/Logo';
-import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
-import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
-import CollapseButton from './CollapseButton';
 import NotificationsPopover from '../header/NotificationsPopover'
 import LanguagePopover from '../header/LanguagePopover'
+import SvgIconStyle from '../../../components/SvgIconStyle'
+import useSettings from '../../../hooks/useSettings'
+import CollapseButton from './CollapseButton'
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
+const RootStyle = styled('div')(({theme}) => ({
   [theme.breakpoints.up('lg')]: {
     flexShrink: 0,
     transition: theme.transitions.create('width', {
@@ -34,11 +34,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const ButtonBox = styled('div')(({ theme }) => ({
-  border: '1px solid rgba(145, 158, 171, 0.32)',
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-}))
-
 // ----------------------------------------------------------------------
 
 NavbarVertical.propTypes = {
@@ -46,14 +41,16 @@ NavbarVertical.propTypes = {
   onCloseSidebar: PropTypes.func,
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
+export default function NavbarVertical({isOpenSidebar, onCloseSidebar}) {
   const theme = useTheme();
 
-  const { pathname } = useLocation();
+  const {pathname} = useLocation();
+
+  const { themeMode, onChangeMode } = useSettings()
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
+  const {isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave} =
     useCollapseDrawer();
 
   useEffect(() => {
@@ -63,11 +60,20 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  const changeModeHandler = () => {
+    const settingMode = themeMode === 'light' ? 'dark' : 'light'
+    onChangeMode(settingMode)
+  }
+
   const renderContent = (
-    <Scrollbar
+    <Box
       sx={{
-        height: 1,
-        '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
+        position: 'relative',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        overflow: 'hidden',
       }}
     >
       <Box>
@@ -78,16 +84,12 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
             pb: 2,
             px: 2.5,
             flexShrink: 0,
-            ...(isCollapse && { alignItems: 'center' }),
+            ...(isCollapse && {alignItems: 'center'}),
           }}
         >
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Logo />
-
-            {/* {isDesktop && !isCollapse && ( */}
-            {/*  <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} /> */}
-            {/* )} */}
-            <NotificationsPopover />
+            {isCollapse ? <Logo min /> : <Logo />}
+            {!isCollapse && <NotificationsPopover />}
           </Stack>
 
         </Stack>
@@ -95,19 +97,42 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
       </Box>
 
-      <Box sx={{ mt: 15 }}>
+      <Box sx={{ pb: 2 }}>
         <NavbarAccount isCollapse={isCollapse} />
+        {!isCollapse && (
+          <Box sx={{width: '87%', m: '0 auto', pt: 1, display: 'flex', justifyContent: 'space-between'}}>
+            <Button
+              onClick={changeModeHandler}
+              variant={'outlined'}
+              sx={{flexGrow: '0.75', fontSize: '14px'}}
+              size="small"
+              startIcon={<SvgIconStyle src="/assets/icons/navbar/DarkMode.svg" />}
+            >
+              Dark Mode
+            </Button>
+            <LanguagePopover />
+          </Box>
+        )}
+        {isCollapse && (
+          <Box sx={{width: '70%', m: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+            <Button
+              onClick={changeModeHandler}
+              variant={'outlined'}
+              size="small"
+              sx={{
+                width: 40,
+                height: 40,
+                mb: 2,
+              }}
+            >
+              <SvgIconStyle src="/assets/icons/navbar/DarkMode.svg" />
+            </Button>
+            <LanguagePopover />
+          </Box>
+        )}
       </Box>
-
-      <Box sx={{ width: '87%', m: '0 auto', pt: 1, display: 'flex', justifyContent: 'space-between' }}>
-        <ButtonBox sx={{ flexGrow: '0.75' }}>
-          Mode
-        </ButtonBox>
-        <ButtonBox>
-          <LanguagePopover />
-        </ButtonBox>
-      </Box>
-    </Scrollbar>
+      {isDesktop && !isCollapse && (<CollapseButton onToggleCollapse={onToggleCollapse}/>)}
+    </Box>
   );
 
   return (
@@ -122,7 +147,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       {!isDesktop && (
-        <Drawer open={isOpenSidebar} onClose={onCloseSidebar} PaperProps={{ sx: { width: NAVBAR.DASHBOARD_WIDTH } }}>
+        <Drawer open={isOpenSidebar} onClose={onCloseSidebar} PaperProps={{sx: {width: NAVBAR.DASHBOARD_WIDTH}}}>
           {renderContent}
         </Drawer>
       )}

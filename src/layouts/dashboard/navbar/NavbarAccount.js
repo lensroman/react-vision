@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { Box, Divider, IconButton, RadioGroup, Radio, Typography, FormControlLabel, Collapse } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
@@ -17,7 +17,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   margin: '0 auto',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.grey[500_12],
+  backgroundColor: alpha(theme.palette.primary.main, 0.08),
   transition: theme.transitions.create('opacity', {
     duration: theme.transitions.duration.shorter,
   }),
@@ -76,11 +76,13 @@ export default function NavbarAccount({ isCollapse }) {
             </Typography>
           </Box>
 
-          <Box sx={{ alignSelf: 'flex-start', pl: 2 }}>
-            <IconButton onClick={accountCollapseHandler} >
-              <SvgIconStyle src="/assets/icons/navbar/NavAccountCollapse.svg" sx={{ width: 12, height: 12, color: 'text.secondary' }} />
-            </IconButton>
-          </Box>
+          {!isCollapse && (
+            <Box sx={{ alignSelf: 'flex-start', pl: 2 }}>
+              <IconButton onClick={accountCollapseHandler} >
+                <SvgIconStyle src="/assets/icons/navbar/NavAccountCollapse.svg" sx={{ width: 12, height: 12, color: 'text.secondary' }} />
+              </IconButton>
+            </Box>
+          )}
         </Box>
 
         <Collapse in={accountCollapse}>

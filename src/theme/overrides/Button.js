@@ -12,6 +12,7 @@ export default function Button(theme) {
         sizeLarge: {
           height: 48,
         },
+        border: `1px solid ${theme.palette.grey[500_32]}`,
         // contained
         containedInherit: {
           color: theme.palette.grey[800],
@@ -39,8 +40,9 @@ export default function Button(theme) {
           boxShadow: theme.customShadows.error,
         },
         // outlined
-        outlinedInherit: {
-          border: `1px solid ${theme.palette.grey[500_32]}`,
+        outlined: {
+          border: `1px solid ${theme.palette.grey[500]}`,
+          borderRadius: Number(theme.shape.borderRadius) * 1.5,
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },

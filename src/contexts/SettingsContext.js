@@ -76,10 +76,10 @@ function SettingsProvider({ children }) {
     });
   };
 
-  const onChangeMode = (event) => {
+  const onChangeMode = (mode) => {
     setSettings({
       ...settings,
-      themeMode: event.target.value,
+      themeMode: mode,
     });
   };
 
