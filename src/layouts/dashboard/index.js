@@ -36,6 +36,24 @@ const MainStyle = styled('main', {
   },
 }));
 
+const FoldersStyle = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'collapseClick',
+})(({theme, collapseClick}) => ({
+  width: '20%',
+  position: 'relative',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  overflow: 'hidden',
+  transition: theme.transitions.create('margin-left', {
+    duration: theme.transitions.duration.shorter,
+  }),
+  ...(collapseClick && {
+    marginLeft: NAVBAR.DASHBOARD_COLLAPSE_WIDTH,
+  }),
+}))
+
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
@@ -91,8 +109,11 @@ export default function DashboardLayout() {
 
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
 
+      <FoldersStyle collapseClick={collapseClick}>
+        <Folders isCollapse={isCollapse}  />
+      </FoldersStyle>
+
       <MainStyle collapseClick={collapseClick}>
-        <Folders isCollapse={isCollapse} />
         <Outlet />
       </MainStyle>
     </Box>
